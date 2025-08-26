@@ -7,9 +7,12 @@ import Donut7Days from "@/components/charts/Donut7Days";
 import CvssBars from "@/components/charts/CvssBars";
 import ChartCaption from "@/components/charts/ChartCaption";
 import LogosBar from "@/components/sections/LogosBar";
-import FeatureRow from "@/components/sections/FeatureRow";
 import FlipCard from "@/components/ui/flip-card";
 import Last7DaysSection from "@/components/sections/Last7Days";
+
+
+
+
 export default function Page() {
   return (
     <>
@@ -37,10 +40,10 @@ export default function Page() {
               <h1
                 style={{
                   width: "min(902px, 100%)",
-                  height: 180,
+                  height: 160,
                   flexShrink: 0,
                   color: "var(--Main-default, #D4EA33)",
-                  textShadow: "0 4px 9.9px #000",
+                  textShadow: "0 4px 19.9px #000",
                   fontFamily:
                     'var(--font-display, "MuseoModerno"), "MuseoModerno", system-ui, sans-serif',
                   fontSize: "clamp(28px, 5vw, 47.78px)",
@@ -81,8 +84,8 @@ export default function Page() {
                     padding: "6px 16px",
                     borderRadius: 10,
                     background: "var(--Main-default, #D4EA33)",
-                    boxShadow: "inset 0 4px 10.6px rgba(0,0,0,0.51)",
-                    color: "#000",
+                    boxShadow: "inset 0 4px 5.6px rgba(0,0,0,0.51)",
+                    color: "#121A21",
                   }}
                 ><br />
                   <span>Browse Vulnerabilities</span>
@@ -168,21 +171,19 @@ export default function Page() {
           hover:scale-[1.02] hover:drop-shadow-[0_10px_24px_rgba(252,191,68,0.25)]
           motion-reduce:transition-none motion-reduce:hover:scale-100
         ">
-              Gain a data-driven overview of reported vulnerabilities across platforms. Our
-              interactive charts highlight frequency, severity, and evolving patterns…
+              Gain a data-driven overview of reported vulnerabilities across platforms. Our interactive charts highlight frequency, severity, and evolving patterns, enabling faster threat assessment and proactive security planning.
             </p>
           </div>
 
           {/* Alttaki metin + karşı chart */}
-          <div className="flex items-center order-2 lg:order-none">
+          <div className=" text-right flex items-center order-2 lg:order-none">
             <p className="
           text-[#FEF5BF] text-2xl leading-9 font-semibold
           transition-all duration-300 ease-out will-change-transform
           hover:scale-[1.02] hover:drop-shadow-[0_10px_24px_rgba(252,191,68,0.25)]
           motion-reduce:transition-none motion-reduce:hover:scale-100
         ">
-              Explore critical exposure metrics by platform and category. This view empowers
-              security teams to pinpoint attack surfaces, prioritize high-risk areas…
+              Explore critical exposure metrics by platform and category. This view empowers security teams to pinpoint attack surfaces, prioritize high-risk areas, and optimize vulnerability management strategies.
             </p>
           </div>
 
@@ -190,23 +191,62 @@ export default function Page() {
         </div>
       </section>
       <br /><br /><br /><br />
-      <section className="py-10">
-        <p className="intro-spot font-josefin" tabIndex={0}>
-          A summarized snapshot of vulnerability data covering critical severity, platform
-          exposure, and exploit trends. Designed to support fast, informed decision-making.
-        </p>
-      </section>
-      <section className="py-10">
+      {/* === FEATURE CARDS – deep bg (intro yazısı + flip kartlar bir arada) === */}
+      <section id="feature-cards" className="relative py-16 md:py-24">
+        {/* ---- layered background (LIGHT GLOW REMOVED) ---- */}
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          {/* 1) dotted/grid */}
+          <div
+            className="absolute inset-0 opacity-[0.10]"
+            style={{
+              backgroundImage:
+                `linear-gradient(to right, rgba(212,234,51,0.18) 1px, transparent 1px),
+           linear-gradient(to bottom, rgba(212,234,51,0.18) 1px, transparent 1px)`,
+              backgroundSize: "38px 38px, 38px 38px",
+              backgroundPosition: "top center",
+            }}
+          />
+        </div>
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid w-fit mx-auto grid-cols-2 md:grid-cols-4 gap-10">
-            <FlipCard />
-            <FlipCard frontTitle="Zero Day" />
+          {/* --- intro yazısı: hover yok, statik pill --- */}
+          <p
+            className="mx-auto max-w-4xl text-center font-josefin rounded-xl
+                 px-6 py-3 text-[18px] md:text-[20px] font-semibold
+                shadow-[0_8px_28px_rgba(0,0,0,.35)]"
+            style={{
+              color: "var(--Text-400, #FEF7CC)",
+              background: "rgba(19,36,42,0.50)",
+            }}
+            tabIndex={0}
+          >
+            A summarized snapshot of vulnerability data covering critical severity, platform
+            exposure, and exploit trends. Designed to support fast, informed decision-making.
+          </p>
+
+          {/* --- kartlar --- */}
+          <div className="mt-10 grid w-fit mx-auto grid-cols-2 md:grid-cols-4 gap-10">
+            {/* FlipCard, dıştan hafif yükselme hover’ı: */}
+            <FlipCard
+              className="transition-transform duration-300 will-change-transform
+                   hover:-translate-y-1 hover:shadow-[0_18px_60px_rgba(0,0,0,.35)]"
+            />
+            <FlipCard
+              frontTitle="Zero Day"
+              className="transition-transform duration-300 will-change-transform
+                   hover:-translate-y-1 hover:shadow-[0_18px_60px_rgba(0,0,0,.35)]"
+            />
             <FlipCard
               frontTitle="Ransom-Ware"
               backTitle="Critical Things"
               backContent="High-risk families that propagate rapidly across networks. Keep backups and segment networks to reduce blast radius."
+              className="transition-transform duration-300 will-change-transform
+                   hover:-translate-y-1 hover:shadow-[0_18px_60px_rgba(0,0,0,.35)]"
             />
-            <FlipCard frontTitle="How to Use Botnet" />
+            <FlipCard
+              frontTitle="How to Use Botnet"
+              className="transition-transform duration-300 will-change-transform
+                   hover:-translate-y-1 hover:shadow-[0_18px_60px_rgba(0,0,0,.35)]"
+            />
           </div>
         </div>
       </section><br /><br /><br />

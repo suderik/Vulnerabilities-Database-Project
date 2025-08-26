@@ -506,3 +506,54 @@ body {
 }
 .nav-no-scrollbar::-webkit-scrollbar { display: none; }
 
+/* === Subscribe glow frame === */
+@keyframes orbitGlow {
+  to { transform: rotate(360deg); }
+}
+
+.subscribe-glow {
+  position: relative;
+  isolation: isolate;            /* pseudo-element içerikte kalır */
+  will-change: transform;
+  transition: transform .25s ease;
+}
+
+.subscribe-glow::before {
+  content: "";
+  position: absolute;
+  inset: -2px;                   /* “ışıklı çerçeve” kalınlığı */
+  border-radius: 10px;           /* input ile aynı radius */
+  padding: 2px;
+  background:
+    conic-gradient(from 0deg,
+      transparent 0 45%,
+      rgba(212,234,51,.22),
+      rgba(252,191,68,.18),
+      transparent 55% 100%);
+  /* içi boş bir çerçeve gibi görünmesi için maskeleme */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+
+  filter: blur(.3px);
+  opacity: 0;                    /* hover/focus’ta görünür */
+  z-index: -1;
+  transform-origin: center;
+  animation: orbitGlow 9s linear infinite;
+  transition: opacity .25s ease;
+}
+
+/* Hover / focus-within: çok hafif büyüt + glowy çerçeve */
+.subscribe-glow:hover,
+.subscribe-glow:focus-within {
+  transform: scale(1.015);
+}
+
+.subscribe-glow:hover::before,
+.subscribe-glow:focus-within::before {
+  opacity: 1;
+}
+
+

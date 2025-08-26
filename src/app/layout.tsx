@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="tr"
-      className={`${poppins.variable} ${josefin.variable} ${museo.variable}`}
+      className={`${poppins.variable} ${josefin.variable} ${museo.variable}`} 
       suppressHydrationWarning
     >
         <body className="bg-primary-900 text-fg min-h-dvh flex flex-col">

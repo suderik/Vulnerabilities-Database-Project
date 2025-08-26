@@ -7,20 +7,20 @@ type Item = { range: string; value: number; color: string };
 export default function CvssBars() {
   // örnek veriler (CVE Details tadında)
   const data: Item[] = [
-    { range: "0-1", value: 4,  color: "#85b86cff" },
-    { range: "1-2", value: 1,  color: "#428523ff" },
-    { range: "2-3", value: 6,  color: "#BCE78C" },
-    { range: "3-4", value: 10, color: "#768a1cff" },
-    { range: "4-5", value: 12, color: "#F6D34E" },
-    { range: "5-6", value: 15, color: "#dfb419ff" },
-    { range: "6-7", value: 32, color: "#124853ff" }, // primary-700 gibi koyu
-    { range: "7-8", value: 14, color: "#206799ff" },
-    { range: "8-9", value: 6,  color: "#705a0aff" },
+    { range: "0-1", value: 4,  color: "#FFC61A" },
+    { range: "1-2", value: 1,  color: "#FDCC69" },
+    { range: "2-3", value: 6,  color: "#8B6925" },
+    { range: "3-4", value: 10, color: "#618450" },
+    { range: "4-5", value: 12, color: "#88BA70" },
+    { range: "5-6", value: 15, color: "#518390" },
+    { range: "6-7", value: 32, color: "#225B6A" }, // primary-700 gibi koyu
+    { range: "7-8", value: 14, color: "#D4EA33" },
+    { range: "8-9", value: 6,  color: "#97A624" },
     { range: "9+",  value: 8,  color: "#4b4203ff" },
   ];
 
   const max = Math.max(...data.map((d) => d.value));
-  const W = 320; // çizim alanı (sol)
+  const W = 280; // çizim alanı (sol)
   const H = 220;
   const barW = 18;
   const gap = 10;
@@ -57,7 +57,7 @@ export default function CvssBars() {
         </div>
 
         {/* Legend sağda */}
-        <div className="flex items-center">
+        <div className="flex items-center p-12">
           <ul className="space-y-2">
             {data.map((d, i) => (
               <li key={i} className="flex items-center gap-3">

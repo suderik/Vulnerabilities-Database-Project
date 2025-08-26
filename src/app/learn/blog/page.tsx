@@ -5,6 +5,7 @@ import InfoCarousel from "@/components/blog/InfoCarousel";
 import Card from "@/components/ui/card";
 import DateDropdown from "@/components/vulnerabilities/DateDropdown";
 import SubscribeCard from "@/components/blog/SubscribeCard";
+import PatternBlogBackdrop from "@/components/decor/PatternBlogBackdrop";
 
 type GridItem = {
   id: string;
@@ -17,8 +18,10 @@ const carouselData = [
   { tag: "Playbook", title: "Exploit chains 101", body: "Zincir yapıları, primitifler ve pratik örneklerle kısa rehber." },
   { tag: "Guide", title: "Prioritize with EPSS", body: "EPSS, KEV ve vendor advisory’leri birleştirerek önceliklendirme." },
   { tag: "Playbook", title: "Weekly threat recap", body: "Son haftanın sömürülen zafiyetleri ve yama durumları." },
-  { tag: "Guide", title: "From CWE → CVE map", body: 
-    "Modern CWE kategorilerini pratik CVE’lerle eşleştiren referans.Modern CWE kategorilerini pratik CVE’lerle eşleştiren referans." },
+  {
+    tag: "Guide", title: "From CWE → CVE map", body:
+      "Modern CWE kategorilerini pratik CVE’lerle eşleştiren referans.Modern CWE kategorilerini pratik CVE’lerle eşleştiren referans."
+  },
   { tag: "Triage", title: "SSRF triage notes", body: "Bulut ortamı için SSRF triage ipuçları ve kontrol listeleri." },
   { tag: "News", title: "New KEV entries", body: "Yeni KEV girişleri, etki alanları ve kaynak linkleri." },
   { tag: "Guide", title: "CI/CD hardening", body: "İmzalı artefakt, bağımlılık sabitleme ve en iyi pratikler." },
@@ -90,9 +93,13 @@ export default function BlogPage() {
       <InfoCarousel items={carouselData} />
       <br /><br /><br />
       {/* === BURADAN SONRASI ENTEGRE EDİLDİ === */}
-      <section className="w-full py-8">
+      <section className="relative py-10">
+        {/* ✅ Arka plan artık tam genişlikte */}
+        <div className="absolute inset-0 -z-10">
+          <PatternBlogBackdrop dot="#D4EA33" line="#88BA70" opacity={1} />
+        </div>
         {/* Başlık + filtre hizalı */}
-        <div className="mx-auto max-w-[1400px] px-2 sm:px-10">
+       <div className="mx-auto max-w-screen-2xl px-6 md:px-10 lg:px-16">
           <div className="mb-6 flex items-center justify-between">
             <h2 className="font-alt font-[700] text-[28px] md:text-[30px] text-[#FEF7CC]">
               Workers &amp; Lorem Ipsum
@@ -109,7 +116,7 @@ export default function BlogPage() {
         </div>
 
         {/* Kart grid (4 sütun, ortalı) */}
-        <div className="mx-auto w-full max-w-[1400px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-12 gap-y-10 place-items-stretch">
+        <div className="mx-auto w-full max-w-[1400px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-10 gap-y-10 place-items-stretch">
           {filtered.map((card) => (
             <Card
               key={card.id}
@@ -151,6 +158,7 @@ export default function BlogPage() {
         <br /><br />
       </section>
       {/* SUBSCRIBE / NEWSLETTER */}
+      
       <SubscribeCard />
       <br /><br />
 

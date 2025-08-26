@@ -14,9 +14,9 @@ function arcPath(cx: number, cy: number, r: number, start: number, end: number) 
 export default function Donut7Days() {
   // yüzde (toplam 100)
   const slices = [
-    { label: "Updated in Last 30 days: 45 (50.0%)", value: 50,   color: "#476129ff" },
-    { label: "New Last 30 Days: 30 (33.3%)",        value: 33.3, color: "#1a3e4aff" },
-    { label: "New Last 7 Days: 15 (16.7%)",         value: 16.7, color: "#FCBF44"   },
+    { label: "Updated in Last 30 days: 45 (50.0%)", value: 50,   color: "#B4C72B" },
+    { label: "New Last 30 Days: 30 (33.3%)",        value: 33.3, color: "#47483C" },
+    { label: "New Last 7 Days: 15 (16.7%)",         value: 16.7, color: "#EAB308"   },
   ];
 
   // açıları hesapla
