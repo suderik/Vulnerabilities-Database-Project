@@ -1,0 +1,29 @@
+export { HomeIcon } from './HomeIcon';
+export { LearnIcon } from './LearnIcon';
+export { AboutIcon } from './AboutIcon';
+export { BugIcon } from './BugIcon';
+export { ChartIcon } from './ChartIcon';
+export { PlusIcon } from './PlusIcon';
+export { SlideBarIcon } from './SlideBarIcon';
+export { TickIcon } from './TickIcon';
+export { SearchIcon } from './SearchIcon';
+export { CircleIcon } from './CircleIcon';
+export { X_Icon } from './X_Icon';
+export { MoreIcon } from './MoreIcon';
+export { ArrowDownIcon } from './ArrowDownIcon';
+export { ArrowLeftIcon } from './ArrowLeftIcon';
+export { ArrowRightIcon } from './ArrowRightIcon';
+export { TrendingUpIcon } from './TrendingUpIcon';
+export { TrendingDownIcon } from './TrendingDownIcon';
+export { MinusIcon } from './MinusIcon';
+export { MailIcon } from './MailIcon';
+export { GithubIcon } from './GithubIcon';
+export { ZoomIcon } from './ZoomIcon';
+export { FavIcon } from './FavIcon';
+export { DownloadIcon } from './DownloadIcon';
+export { DatabaseIcon } from './DatabaseIcon';
+export { ClickIcon } from './ClickIcon';
+export { InfoIcon } from './InfoIcon';
+export { LinkedinIcon } from './LinkedinIcon';
+
+

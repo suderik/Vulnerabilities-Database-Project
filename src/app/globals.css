@@ -1,0 +1,508 @@
+/* ÖNCE tokenlar, SONRA tailwind */
+@import "./styles/tokens.css";
+@import "tailwindcss";
+
+/* ---- Base (Plain CSS, config'e bağlı değil) ---- */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: hsl(var(--primary-900));
+  /* site bg = primary-900 */
+  color: hsl(var(--fg));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ---- Custom utilities (Plain CSS, config'e bağlı değil) ---- */
+.bg-bg {
+  background-color: hsl(var(--bg));
+}
+
+.bg-bg-soft {
+  background-color: hsl(var(--bg-soft));
+}
+
+.bg-card {
+  background-color: hsl(var(--card));
+}
+
+.text-fg {
+  color: hsl(var(--fg));
+}
+
+.text-muted {
+  color: hsl(var(--muted));
+}
+
+.bg-fg {
+  background-color: hsl(var(--fg));
+}
+
+.bg-primary-50 {
+  background-color: hsl(var(--primary-50));
+}
+
+.bg-primary-100 {
+  background-color: hsl(var(--primary-100));
+}
+
+.bg-primary-200 {
+  background-color: hsl(var(--primary-200));
+}
+
+.bg-primary-300 {
+  background-color: hsl(var(--primary-300));
+}
+
+.bg-primary-400 {
+  background-color: hsl(var(--primary-400));
+}
+
+.bg-primary-500 {
+  background-color: hsl(var(--primary-500));
+}
+
+.bg-primary-600 {
+  background-color: hsl(var(--primary-600));
+}
+
+.bg-primary-700 {
+  background-color: hsl(var(--primary-700));
+}
+
+.bg-primary-800 {
+  background-color: hsl(var(--primary-800));
+}
+
+.bg-primary-900 {
+  background-color: hsl(var(--primary-900));
+}
+
+.text-primary-500 {
+  color: hsl(var(--primary-500));
+}
+
+.bg-green-500 {
+  background-color: hsl(var(--green-500));
+}
+
+.bg-orange-500 {
+  background-color: hsl(var(--orange-500));
+}
+
+.hover\:bg-primary-600:hover {
+  background-color: hsl(var(--primary-600));
+}
+
+.hover\:bg-green-600:hover {
+  background-color: hsl(var(--green-600));
+}
+
+.hover\:bg-orange-600:hover {
+  background-color: hsl(var(--orange-600));
+}
+
+.rounded-xl2 {
+  border-radius: 1.25rem;
+}
+
+.shadow-card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+}
+
+/* ===== Font family UTILITIES (istediğin yerde seç) ===== */
+.font-poppins {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.font-josefin {
+  font-family: var(--font-alt), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.font-museo {
+  font-family: var(--font-display), "MuseoModerno", system-ui, sans-serif;
+}
+
+/* Geriye dönük uyumluluk (projede kullanıldıysa bozulmasın) */
+.font-sans {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.font-alt {
+  font-family: var(--font-alt), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), "MuseoModerno", system-ui, sans-serif;
+}
+
+/* ===== Tipografi SCALE (sadece boyut/ağırlık; font-family YOK) ===== */
+/* Başlıklar */
+.thx-h1 {
+  font-size: 47.8px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: normal;
+}
+
+.thx-h2 {
+  font-size: 39.8px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: normal;
+}
+
+.thx-h3 {
+  font-size: 33.3px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: normal;
+}
+
+.thx-h4 {
+  font-size: 27.6px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: normal;
+}
+
+.thx-h5 {
+  font-size: 23px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: normal;
+}
+
+.thx-h6 {
+  font-size: 19.2px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: normal;
+}
+
+/* Paragraflar */
+.thx-p {
+  font-size: 16px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: normal;
+}
+
+.thx-p-lg {
+  font-size: 13.3px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: normal;
+}
+
+.thx-p-sm {
+  font-size: 11px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: normal;
+}
+
+
+/* --- SLOGAN MARQUEE --- */
+.slogan {
+  color: var(--Neutrals-900, #121A21);
+  text-align: center;
+  font-family: var(--font-display, "MuseoModerno"), "MuseoModerno", system-ui, sans-serif;
+  font-size: 13.33px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  white-space: nowrap;
+  /* tek satır */
+}
+
+.marquee {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  /* taşanı gizle */
+}
+
+.marquee__track {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  width: max-content;
+  /* içerik kadar */
+  animation: thx-marquee 28s linear infinite;
+  /* sürekli akış */
+}
+
+@keyframes thx-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+
+  /* ilk yarıyı kaydır (içerik 2 kez tekrar edilmiştir) */
+}
+
+/* ===== HERO GRID ===== */
+.hero-grid {
+  /* Grid ve çerçeve rengi (#FCBF44 @ 21%) */
+  --thx-grid: rgba(252, 191, 68, 0.21);
+
+  position: relative;
+  width: 100%;
+  /* 1440×605 hedefini koruyarak responsive yükseklik */
+  height: clamp(360px, 42vw, 605px);
+
+  /* İnce kareli grid */
+  background-image:
+    linear-gradient(to right, var(--thx-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--thx-grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  /* kare boyutu, istersen 24px yapabilirsin */
+  border: 1px solid var(--thx-grid);
+  /* “selection & borders” = aynı renk */
+}
+
+/* Küçük ekranda kareyi biraz sıklaştır */
+@media (max-width: 640px) {
+  .hero-grid {
+    background-size: 24px 24px;
+  }
+}
+
+/* İç boşluk */
+.hero-content {
+  padding: clamp(16px, 4vw, 48px);
+}
+
+/* Hero'yu container dışına taşımak için */
+.full-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+.dotted-frame {
+  position: relative;
+  width: 543px;
+  height: 537px;
+  flex-shrink: 0;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 24px;
+}
+
+/* grid arka planda kalsın */
+.dotted-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: radial-gradient(rgba(252, 191, 68, 0.21) 1.8px, transparent 1.8px);
+  background-size: 20px 20px;
+  mix-blend-mode: exclusion;
+  pointer-events: none;
+  z-index: 0;
+  /* ⬅️ grid arkada */
+}
+
+/* içteki kart/graph her zaman üstte */
+.dotted-frame>* {
+  position: relative;
+  z-index: 1;
+  /* ⬅️ kart önde */
+}
+
+/* === LOGO BAR === */
+.logo-bar {
+  height: 182px;
+  /* Figma yüksekliği */
+  background: hsl(var(--primary-800) / 0.8);
+  /* opacity: 0.8 + primary-800 */
+}
+
+/* full-bleed yardımcı (hero’da kullandığımızla aynı mantık) */
+.full-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+/* marquee */
+/* === LOGO BAR === */
+.logo-bar {
+  height: 182px;
+  background: hsl(var(--primary-800) / 0.8);
+}
+
+/* full-bleed aynı kalsın */
+.full-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+/* marquee */
+.logo-marquee {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.logo-track {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: max-content;
+  /* ⬇️ hız değişkeni ile kontrol — default 60s */
+  animation: thx-logo-scroll var(--logo-speed, 60s) linear infinite;
+}
+
+.logo-track.reverse {
+  animation-direction: reverse;
+}
+
+@keyframes thx-logo-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* item stilleri */
+.logo-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+}
+
+.logo-img {
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  border-radius: 50px;
+  background: lightgray 50%/cover no-repeat;
+}
+
+.logo-text {
+  font-size: 23.04px;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.logo-marquee {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+}
+
+/* ——— Centered intro text ——— */
+.intro-spot {
+  width: min(1007px, 100%);
+  margin: 0 auto;
+  padding: 12px 16px;
+  /* hover'da arka plan görünmesi için hafif iç boşluk */
+  border-radius: 12px;
+  /* istersen 0 yapabilirsin */
+  color: var(--Text-400, #FEF7CC);
+  text-align: center;
+
+  /* h5-josefin */
+  font-family: var(--font-alt), "Josefin Sans", system-ui, sans-serif;
+  font-size: 23.04px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+
+  background: transparent;
+  transition: transform .25s ease, background-color .25s ease, text-shadow .25s ease;
+  will-change: transform;
+}
+
+.intro-spot:hover {
+  transform: scale(1.02);
+  background: hsl(var(--darker-900) / 0.45);
+  /* koyulaşma */
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  /* yazıya hafif glow */
+}
+
+/* Klavye odak için de aynı hissiyat */
+.intro-spot:focus-visible {
+  outline: 2px solid hsl(var(--green-500));
+  outline-offset: 2px;
+  background: hsl(var(--darker-900) / 0.45);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+:root{
+  --threx-header:#6B6750;   /* header */
+  --threx-headerText:#FEF5BF;
+  --threx-body:#FEF7CC;     /* body hücre */
+  --threx-border:#8C8769;
+}
+
+/* tablo kabı: ortalı ve taşma kontrolü */
+.threx-table {
+  width: min(1152px, 92vw);
+  margin-inline: auto;
+  border-radius: 14px;
+  overflow: hidden;        /* header/body kenarları temiz dursun */
+  border: 0;               /* isteğe bağlı */
+}
+
+/* HEADER */
+.threx-table thead th {
+  position: relative;
+  height: 56px;
+  background: var(--threx-header);
+  color: var(--threx-headerText);
+  font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+  font-weight: 600;
+  font-size: 11px;
+  text-align: center;
+}
+
+.threx-table thead th::after{
+  content:"";
+  position:absolute; inset:0;
+  pointer-events:none;
+  opacity:.22;
+  mix-blend-mode:multiply;
+  background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAARklEQVQ4T2NkYGBg+M+ABQxgYGBg2L9hGJgYgJgYxGQwMDA8jGgGQwYxJgGxj8E0JYJwWwJQ2mG7B2Gg3kGgkGQf8BA2cGAA4a2oE7M1c5wAAAABJRU5ErkJggg==");
+}
+
+/* BODY */
+.threx-table tbody td{
+  background: var(--threx-body);
+  border-bottom: 1px solid var(--threx-border);
+  padding: 0;              /* iç boşluğu iç wrapper verecek */
+}
+
+/* son satır alt çizgisi olmasın */
+.threx-table tbody tr:last-child td{ border-bottom: 0; }
+
+/* hücre iç boşluğu – iç bileşenleri bunun içine koy */
+.threx-cell{
+  display:flex; align-items:center; justify-content:center;
+  gap:12px;
+  padding:18px 12px;
+}
+
+.nav-no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.nav-no-scrollbar::-webkit-scrollbar { display: none; }
+
