@@ -7,72 +7,141 @@ import { DateCell } from "./cells/DateCell";
 import { TextCell } from "./cells/TextCell";
 import { PlatformCell } from "./cells/PlatformCell";
 import { FixableCell } from "./cells/FixableCell";
-import { StatusCell } from "./cells/StatusCell";
 import { ActionCell } from "./cells/ActionCell";
 import { HeaderCell } from "./cells/HeaderCell";
 
-/* UI */
 import { Button } from "@/components/ui/button";
 import { MoreIcon } from "@/components/icons/MoreIcon";
 
+// ---------------- types ----------------
 export type VulnRow = {
   id: string;
   order: number;
-  date: string;
-  cweId: string;
-  platform: string;
-  pkg: string;
-  version: string;
+  date: string;     // "YYYY-MM-DD"
+  cveId: string;    // "CVE-79"...
+  platform: string; // "Windows" | "Linux" | ...
+  pkg: string;      // "OpenSSL" | "Chromium" | ...
+  version: string;  // "v1.2" | ...
   fixable: boolean;
-  status: "active" | "press" | "pending";
 };
 
-const COLUMNS = [
-  "Order",
-  "Date",
-  "CWE ID",
-  "Platform",
-  "Package",
-  "Version",
-  "Fixable",
-  "Status",
-  "See More",
-] as const;
+type ActiveFilters = {
+  q?: string;
+  date?: string;
+  pkg?: string;
+  platform?: string;
+  dyn?: { fieldKey: string; value: string }[];
+};
 
+// -------------- columns (aynı) --------------
+const COLUMNS = ["Order","Date","CVE ID","Platform","Package","Version","Fixable","See More"] as const;
 const COL_WIDTHS: Partial<Record<(typeof COLUMNS)[number], number>> = {
-  Order: 80,
-  Date: 120,
-  "CWE ID": 120,
-  Fixable: 110,
-  Status: 120,
-  "See More": 120,
+  Order: 80, Date: 120, "CVE ID": 140, Fixable: 110, Platform: 150, "See More": 120,
 };
 
+// -------------- demo data (kaldı) --------------
 const demo: VulnRow[] = Array.from({ length: 30 }).map((_, i) => ({
-  id:
-    typeof crypto !== "undefined" && "randomUUID" in crypto
-      ? crypto.randomUUID()
-      : `row-${i}`,
+  id: typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `row-${i}`,
   order: i + 1,
   date: `2025-01-${String((i % 30) + 1).padStart(2, "0")}`,
-  cweId: ["CWE-79", "CWE-89", "CWE-120", "CWE-200"][i % 4],
+  cveId: ["CVE-79", "CVE-89", "CVE-120", "CVE-200"][i % 4],
   platform: ["Windows", "Linux", "macOS", "Android"][i % 4],
   pkg: ["OpenSSL", "Chromium", "Apache", "Linux"][i % 4],
   version: ["v1.2", "v2.0", "v3.1", "v1.5"][i % 4],
   fixable: i % 2 === 0,
-  status: (["active", "press", "pending"] as const)[i % 3],
 }));
 
-const INITIAL_ROWS = 7; // 7 satırla başla
-const STEP = 5;         // her tıklamada +5
+const INITIAL_ROWS = 7;
+const STEP = 5;
 
-export default function VulnTable({ rows = demo }: { rows?: VulnRow[] }) {
+// -------------- helpers --------------
+function parse(d: string) { return new Date(d + "T00:00:00"); }
+
+function applyFilters(rows: VulnRow[], f?: ActiveFilters) {
+  if (!f) return rows;
+  let out = rows.slice();
+
+  const lc = (s: unknown) => String(s ?? "").toLowerCase();
+
+  // q: çoklu alanda arama
+  if (f.q) {
+    const q = lc(f.q);
+    out = out.filter((r) =>
+      [r.cveId, r.platform, r.pkg, r.version, r.date].some((v) => lc(v).includes(q))
+    );
+  }
+
+  // date: '7d'/'30d' => veri içindeki EN SON tarihe göre aralık,
+  // yıl (2025/2024/2023) => yıl eşleşmesi
+  if (f.date) {
+    if (["7d", "30d"].includes(f.date)) {
+      const maxMs = Math.max(...out.map((r) => +parse(r.date)));
+      const maxDate = new Date(maxMs);
+      const delta = f.date === "7d" ? 7 : 30;
+      const start = new Date(maxDate); start.setDate(start.getDate() - delta + 1);
+      out = out.filter((r) => parse(r.date) >= start && parse(r.date) <= maxDate);
+    } else if (/^\d{4}$/.test(f.date)) {
+      out = out.filter((r) => parse(r.date).getFullYear() === Number(f.date));
+    }
+  }
+
+  // package
+  if (f.pkg) {
+    const map: Record<string, string> = {
+      openssl: "openssl",
+      linux: "linux",
+      chromium: "chromium",
+      httpd: "apache", // dropdown "Apache" httpd -> tablo "Apache"
+    };
+    const needle = map[f.pkg] ?? f.pkg;
+    out = out.filter((r) => lc(r.pkg).includes(needle));
+  }
+
+  // platform
+  if (f.platform) {
+    const map: Record<string, string> = { macos: "mac", windows: "windows", linux: "linux", android: "android", ios: "ios" };
+    const needle = map[f.platform] ?? f.platform;
+    out = out.filter((r) => lc(r.platform).includes(needle));
+  }
+
+  // dinamik alanlar
+  (f.dyn ?? []).forEach(({ fieldKey, value }) => {
+    if (!value) return;
+    const v = lc(value);
+    if (fieldKey === "cwe") {
+      // Liste cwe-120 vb; tabloda "CVE-120" var → sayı eşleştirelim
+      const num = v.replace(/[^0-9]/g, "");
+      out = out.filter((r) => lc(r.cveId).includes(num));
+    } else if (fieldKey === "version") {
+      out = out.filter((r) => lc(r.version).startsWith(v));
+    } else if (fieldKey === "fixable") {
+      const yes = v === "yes";
+      out = out.filter((r) => r.fixable === yes);
+    } else if (fieldKey === "status") {
+      // Demo satırlarda status yok → şimdilik atla
+    }
+  });
+
+  return out;
+}
+
+// -------------- component --------------
+export default function VulnTable({
+  rows = demo,
+  filters,
+}: {
+  rows?: VulnRow[];
+  filters?: ActiveFilters;
+}) {
+  const filtered = React.useMemo(() => applyFilters(rows, filters), [rows, filters]);
+
   const [rowsToShow, setRowsToShow] = useState(INITIAL_ROWS);
+  React.useEffect(() => { setRowsToShow(INITIAL_ROWS); }, [filters]); // yeni filtrede başa dön
 
-  const handleLoadMore = () => setRowsToShow((prev) => Math.min(prev + STEP, rows.length));
+  const handleLoadMore = () => setRowsToShow((prev) => Math.min(prev + STEP, filtered.length));
   const handleReset = () => setRowsToShow(INITIAL_ROWS);
 
-  const allShown = rowsToShow >= rows.length;
+  const allShown = rowsToShow >= filtered.length;
   const atInitial = rowsToShow === INITIAL_ROWS;
 
   return (
@@ -81,10 +150,7 @@ export default function VulnTable({ rows = demo }: { rows?: VulnRow[] }) {
         <table className="threx-table table-fixed border-separate border-spacing-0 w-full">
           <colgroup>
             {COLUMNS.map((c) => (
-              <col
-                key={c}
-                style={COL_WIDTHS[c] ? { width: `${COL_WIDTHS[c]}px` } : undefined}
-              />
+              <col key={c} style={COL_WIDTHS[c] ? { width: `${COL_WIDTHS[c]}px` } : undefined} />
             ))}
           </colgroup>
 
@@ -99,16 +165,15 @@ export default function VulnTable({ rows = demo }: { rows?: VulnRow[] }) {
           </thead>
 
           <tbody>
-            {rows.slice(0, rowsToShow).map((r) => (
+            {filtered.slice(0, rowsToShow).map((r) => (
               <tr key={r.id}>
                 <td className="threx-td threx-td-reset"><OrderCell n={r.order} /></td>
                 <td className="threx-td threx-td-reset"><DateCell value={r.date} /></td>
-                <td className="threx-td threx-td-reset"><TextCell value={r.cweId} /></td>
+                <td className="threx-td threx-td-reset"><TextCell value={r.cveId} /></td>
                 <td className="threx-td threx-td-reset"><PlatformCell name={r.platform} /></td>
                 <td className="threx-td threx-td-reset"><TextCell value={r.pkg} /></td>
                 <td className="threx-td threx-td-reset"><TextCell value={r.version} /></td>
                 <td className="threx-td"><FixableCell value={r.fixable} /></td>
-                <td className="threx-td"><StatusCell value={r.status} /></td>
                 <td className="threx-td"><ActionCell href="#" /></td>
               </tr>
             ))}
@@ -116,29 +181,14 @@ export default function VulnTable({ rows = demo }: { rows?: VulnRow[] }) {
         </table>
       </div>
 
-      {/* Görsel amaçlı “More” ayırıcı ikonu */}
       <MoreIcon className="rotate-90 text-gray-500 w-6 h-6" aria-hidden="true" />
 
-      {/* Kontrol butonları */}
       <div className="flex items-center gap-3">
-        {/* LOAD MORE — Button dosyasındaki stil & hover kullanılacak */}
-        <Button
-          onClick={handleLoadMore}
-          disabled={allShown}
-          size="lg"
-          className="w-[224px] group"
-        >
+        <Button onClick={handleLoadMore} disabled={allShown} size="lg" className="w-[224px] group">
           Click for More Data
         </Button>
-
-
-        {/* RESET — başlangıçtan farklıysa göster */}
         {!atInitial && (
-          <Button
-            onClick={handleReset}
-            size="lg"
-            className="w-[224px]"
-          >
+          <Button onClick={handleReset} size="lg" className="w-[224px]">
             Reset to 7 Rows
           </Button>
         )}

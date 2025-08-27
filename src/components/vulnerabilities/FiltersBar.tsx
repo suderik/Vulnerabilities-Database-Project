@@ -8,7 +8,19 @@ import PackageDropdown from "./PackageDropdown";
 import PlatformDropdown from "./PlatformDropdown";
 import ListDropdown, { type Option } from "./ListDropdown";
 
-export default function FiltersBar() {
+export type FiltersState = {
+  q: string;
+  date: string;
+  pkg: string;
+  platform: string;
+  dyn: { fieldKey: string; value: string }[];
+};
+
+export default function FiltersBar({
+  onChange,
+}: {
+  onChange?: (next: FiltersState) => void;
+}) {
   const [q, setQ] = React.useState("");
   const [date, setDate] = React.useState("");
   const [pkg, setPkg] = React.useState("");
@@ -35,28 +47,22 @@ export default function FiltersBar() {
     { label: "iOS", value: "ios" },
   ];
 
-  type DynFilter = {
-    id: string;
-    fieldKey: string;
-    value: string;
-    showValue: boolean;
-  };
-
-  /** 🔸 Limit doğrudan filtre nesnesi sayısına göre */
-  const MAX_DYN = 3;
+  type DynFilter = { id: string; fieldKey: string; value: string; showValue: boolean };
+  const MAX_DYN = 2;
 
   const [dyn, setDyn] = React.useState<DynFilter[]>([]);
   const [alert, setAlert] = React.useState<string | null>(null);
+  const reachedLimit = dyn.length >= MAX_DYN;
 
   const FILTER_FIELDS: { key: string; label: string; options: Option[] }[] = [
     {
-      key: "cwe",
-      label: "CWE ID",
+      key: "cve",
+      label: "CVE ID",
       options: [
-        { label: "CWE-79", value: "cwe-79" },
-        { label: "CWE-89", value: "cwe-89" },
-        { label: "CWE-120", value: "cwe-120" },
-        { label: "CWE-200", value: "cwe-200" },
+        { label: "CVE-79", value: "cve-79" },
+        { label: "CVE-89", value: "cve-89" },
+        { label: "CVE-120", value: "cve-120" },
+        { label: "CVE-200", value: "cve-200" },
       ],
     },
     {
@@ -76,64 +82,49 @@ export default function FiltersBar() {
         { label: "No", value: "no" },
       ],
     },
-    {
-      key: "status",
-      label: "Status",
-      options: [
-        { label: "active", value: "active" },
-        { label: "press", value: "press" },
-        { label: "pending", value: "pending" },
-      ],
-    },
+
   ];
 
-  const fieldOptions: Option[] = FILTER_FIELDS.map((f) => ({
-    label: f.label,
-    value: f.key,
-  }));
+  const fieldOptions: Option[] = FILTER_FIELDS.map((f) => ({ label: f.label, value: f.key }));
   const getValueOptions = (fieldKey: string): Option[] =>
     FILTER_FIELDS.find((f) => f.key === fieldKey)?.options ?? [];
 
   const firstKey = FILTER_FIELDS[0]?.key ?? "cwe";
 
-  
   const handleAddFilter = () => {
-    // 1) Value'u henüz gösterilmemiş bir filtre varsa önce onu tamamlat
     const idxNoValueShown = dyn.findIndex((f) => !f.showValue);
     if (idxNoValueShown !== -1) {
-      setDyn((arr) =>
-        arr.map((x, i) => (i === idxNoValueShown ? { ...x, showValue: true } : x))
-      );
+      setDyn((arr) => arr.map((x, i) => (i === idxNoValueShown ? { ...x, showValue: true } : x)));
       return;
     }
-
-    // 2) Yeni bir filtre eklemek üzereyiz; limit dolu mu?
     if (dyn.length >= MAX_DYN) {
       setAlert("Daha fazla filtre eklenemiyor.");
       return;
     }
-
-    // 3) Yeni filtreyi sadece Field açık şekilde ekle
-    setDyn((d) => [
-      ...d,
-      { id: crypto.randomUUID(), fieldKey: firstKey, value: "", showValue: false },
-    ]);
+    setDyn((d) => [...d, { id: crypto.randomUUID(), fieldKey: firstKey, value: "", showValue: false }]);
   };
 
   const handleRemove = (id: string) => setDyn((d) => d.filter((x) => x.id !== id));
 
   const handleClearAll = () => {
-    setQ("");
-    setDate("");
-    setPkg("");
-    setPlatform("");
-    setDyn([]);
-    setAlert(null);
+    setQ(""); setDate(""); setPkg(""); setPlatform(""); setDyn([]); setAlert(null);
   };
 
   const handleSearch = (value: string) => {
-    console.log("search", { query: value, date, pkg, platform, filters: dyn });
+    // enter/ikon ile aramada da tetikleyelim (state zaten onChange ile yayılıyor)
+    setQ(value);
   };
+
+  // 🔗 Değişiklikleri yukarı (FiltersBridge) bildir
+  React.useEffect(() => {
+    onChange?.({
+      q,
+      date,
+      pkg,
+      platform,
+      dyn: dyn.map(({ fieldKey, value }) => ({ fieldKey, value })),
+    });
+  }, [q, date, pkg, platform, dyn, onChange]);
 
   return (
     <div className="mt-8">
@@ -152,55 +143,32 @@ export default function FiltersBar() {
                 options={fieldOptions}
                 value={f.fieldKey}
                 onChange={(newKey) =>
-                  setDyn((arr) =>
-                    arr.map((x) =>
-                      x.id === f.id ? { ...x, fieldKey: newKey, value: "" } : x
-                    )
-                  )
+                  setDyn((arr) => arr.map((x) => (x.id === f.id ? { ...x, fieldKey: newKey, value: "" } : x)))
                 }
                 width={174}
                 height={47}
               />
-
               {f.showValue && (
                 <ListDropdown
                   label="Value"
                   options={getValueOptions(f.fieldKey)}
                   value={f.value}
                   onChange={(v) =>
-                    setDyn((arr) =>
-                      arr.map((x) => (x.id === f.id ? { ...x, value: v } : x))
-                    )
+                    setDyn((arr) => arr.map((x) => (x.id === f.id ? { ...x, value: v } : x)))
                   }
                   width={174}
                   height={47}
                 />
               )}
-
               <button
                 type="button"
                 onClick={() => handleRemove(f.id)}
                 className="inline-flex items-center justify-center rounded-full"
-                style={{
-                  width: 36,
-                  height: 36,
-                  background: "var(--Primary-800, #143740)",
-                  color: "var(--Text-default, #FEF5BF)",
-                }}
+                style={{ width: 36, height: 36, background: "var(--Primary-800, #143740)", color: "var(--Text-default, #FEF5BF)" }}
                 aria-label="Remove filter"
                 title="Remove"
               >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                   <path d="M18 6L6 18M6 6l12 12" />
                 </svg>
               </button>
@@ -212,6 +180,9 @@ export default function FiltersBar() {
           <button
             type="button"
             onClick={handleAddFilter}
+            disabled={reachedLimit}
+            aria-disabled={reachedLimit}
+            title={reachedLimit ? "En fazla 2 filtre ekleyebilirsin" : "Add a Filter"}
             className="inline-flex items-center justify-center gap-[10px] rounded-[28px] h-[47px] px-4 transition-colors hover:brightness-[1.05] focus-visible:outline focus-visible:outline-2"
             style={{
               width: 194,
@@ -221,19 +192,12 @@ export default function FiltersBar() {
               fontWeight: 600,
               fontSize: 16,
               boxShadow: "inset 0 0 0 2px rgba(246, 250, 207, 0.78)",
+              opacity: reachedLimit ? 0.6 : 1,
+              cursor: reachedLimit ? "not-allowed" : "pointer"
             }}
           >
             <span className="inline-flex items-center p-[5px]">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--Text-default, #D4EA33)"
-                strokeWidth="3.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--Text-default, #D4EA33)" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 5v14M5 12h14" />
               </svg>
             </span>
@@ -271,11 +235,7 @@ export default function FiltersBar() {
           role="status"
         >
           {alert}
-          <button
-            onClick={() => setAlert(null)}
-            className="ml-3 underline underline-offset-4"
-            style={{ color: "var(--Primary-900, #102A31)" }}
-          >
+          <button onClick={() => setAlert(null)} className="ml-3 underline underline-offset-4" style={{ color: "var(--Primary-900, #102A31)" }}>
             Tamam
           </button>
         </div>
