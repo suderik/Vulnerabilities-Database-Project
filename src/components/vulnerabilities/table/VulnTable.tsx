@@ -174,7 +174,7 @@ export default function VulnTable({
                 <td className="threx-td threx-td-reset"><TextCell value={r.pkg} /></td>
                 <td className="threx-td threx-td-reset"><TextCell value={r.version} /></td>
                 <td className="threx-td"><FixableCell value={r.fixable} /></td>
-                <td className="threx-td"><ActionCell href="#" /></td>
+                <td className="threx-td"><ActionCell href={`/vulnerabilities/${r.cveId.toLowerCase()}`}  /></td>
               </tr>
             ))}
           </tbody>

@@ -10,7 +10,7 @@ export default function VulnerabilitiesPage() {
     <main className="relative px-6 md:px-10 lg:px-16 xl:px-24 py-10">
       <PageChrome />
       <section className="py-10">
-        <br /><br /><br /><br />
+        <br />
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* HERO */}
           <HeroChart />
